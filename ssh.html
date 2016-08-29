@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Secure SHell</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Cutive+Mono:400,700,400italic);
+
+      body {
+        font-family: 'Noto Sans';
+      }
+      h1 {
+        font-size: 50px;
+      }
+      h2 {
+        font-size: 40px;
+      }
+      h3 {
+        font-size: 30px;
+      }
+      h1, h2, h3 {
+        font-weight: normal;
+      }
+
+      .remark-slide-content {
+        font-size: 28px;
+        padding-top: 0;
+      }
+      .remark-code, .remark-inline-code {
+        font-family: 'Cutive Mono';
+        font-size: '36px';
+      }
+
+      .remark-slide-content {
+        background-size: cover;
+        background-image: url(images/background.jpg)
+      }
+
+      .remark-slide-number {
+        font-size: 14px;
+      }
+
+      img {
+        padding: 10px 10px 10px 10px;
+        margin: 10px 10px 10px 10px;
+      }
+
+      /* Two-column layout */
+      .left-column {
+        color: #777;
+        width: 30%;
+        /*height: 92%;*/
+        float: left;
+      }
+      .left-column h2:last-of-type, .left-column h3:last-child {
+        color: #000;
+      }
+      .right-column {
+        width: 68%;
+        float: right;
+      }
+
+      .centered {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        /* bring your own prefixes */
+        transform: translate(-10%, -50%);
+      }
+
+    </style>
+  </head>
+  <body>
+    <!--<textarea id="source"></textarea>-->
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+    <script>
+      var slideshow = remark.create({
+        ratio: '16:9',
+        slideNumberFormat: '%current% of %total%',
+        countIncrementalSlides: false,
+        sourceUrl: 'content.md'
+        });
+      remark.macros.scale = function (percentage) {
+        var url = this;
+        return '<img src="' + url + '" style="width: ' + percentage + '" />';
+      };
+    </script>
+  </body>
+</html>
