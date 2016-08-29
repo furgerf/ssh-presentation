@@ -53,7 +53,7 @@ layout: true
 
 --
 .right-column[
-### RTFM! 😄
+### Well, RTFM! 😄
 ![:scale 90%](images/man-ssh.png)
 ]
 
@@ -104,7 +104,7 @@ count: false
 - network protocol
   ![:scale 85%](images/osi-layer.png)
 - _but, it's no application (and no shell!)_
-- Client-server architecture
+- client-server architecture
 ]
 
 ---
@@ -114,8 +114,8 @@ count: false
 - network protocol
   ![:scale 85%](images/osi-layer.png)
 - _but, it's no application (and no shell!)_
-- Client-server architecture
-- secures the channel, not the messages
+- client-server architecture
+- secures communication, not the messages
 ]
 
 ???
@@ -280,6 +280,25 @@ layout: true
 - TODO: crypto hs, conn encrypted with symmetric cipher, client authenticates
 ]
 
+--
+.right-column[
+- authentication methods:
+  - GSSAPI-based, host-based, **public key**, challenge-response, password
+  - public key: grant access when public key in `~/.ssh/authorized_hosts` belongs to user/host TODO there's something missing here
+  - password transmission is safe because communication is encrypted
+]
+???
+Host-based: grant access if host is listed in `/etc/hosts.equiv` (or one of a few other files), the
+username matches, and the key in `known_hosts` matches. This is inherently insecure.
+challenge-response: server sends Qq and expects response (eg. Bx or PAM).
+
+--
+.right-column[
+- `ssh` maintains `~/.ssh/known_hosts` file to avoid MITM attacks
+]
+???
+MITM demo
+
 ---
 layout: true
 .left-column[
@@ -293,7 +312,7 @@ layout: true
 
 --
 .right-column[
-- SSH extends the attack surface
+- any connection increases the attack surface
 ]
 
 --
@@ -307,7 +326,7 @@ layout: true
 ---
 
 .right-column[
-- SSH extends the attack surface
+- any connection increases the attack surface
 ]
 
 .right-column[
@@ -373,25 +392,40 @@ layout: true
   ## Why SSH?
   ## How to SSH?
   ## SSH usage
-  ### Basic usage
 ]
 ---
 
 --
+.right-column[
+#### Manual
+
+`ssh  [-1246AaCfGgKkMNnqsTtVvXxYy]  [-b  bind_address]  [-c  cipher_spec]  [-D[bind_address  :]port] [-E log_file] [-e escape_char] [-F configfile] [-I pkcs11] [-i identity_file] [-J[user@]host[:port]] [-L address] [-l login_name] [-m mac_spec] [-O ctl_cmd] [-o option] [-p port] [-Q query_option] [-R address] [-S ctl_path] [-W host :port] [-w local_tun[:remote_tun]] [user@]hostname [command]`
+]
+
+---
+layout: true
+.left-column[
+  ## What is SSH?
+  ## Why SSH?
+  ## How to SSH?
+  ## SSH usage
+  ### Basic usage
+]
+---
 .right-column[.centered[
- ## `ssh host`
+## `ssh host`
 ]]
 
 ---
 count: false
 .centered[
- ## `ssh user@host`
+## `ssh user@host`
 ]
 
 ---
 count: false
 .centered[
- ## `ssh user@host COMMAND`
+## `ssh user@host COMMAND`
 ]
 
 ???
@@ -400,9 +434,8 @@ Demo
 ---
 count: false
 .centered[
- ## `ssh -X user@host COMMAND`
+## `ssh -X user@host COMMAND`
 ]
-
 ???
 Demo
 
@@ -414,18 +447,84 @@ layout: true
   ## How to SSH?
   ## SSH usage
   ### Basic usage
-  ### Environment
+  ### Options
 ]
 ---
 
+---
+.right-column[
+- `-C`: enable compression
+]
+???
+uses `gzip` - recommended for slow networks only
+
 --
 .right-column[
-```
-SSH_CONNECTION
-SSH_AUTH_SOCK
-SSH_CLIENT
-SSH_TTY
-```
+- `-c`: specify cipher
+]
+???
+has security and performance implications
+
+--
+.right-column[
+- `-D [bind_address:]port`: dynamic port forwarding
+]
+???
+listens on the local address and forwards all connections to the address
+unix sockets can be forwarded as well
+
+--
+.right-column[
+- `-f`: fork to background, recommended when using X11-forwarding
+]
+???
+implies `-n` (stdin > /dev/null)
+
+--
+.right-column[
+- `-g`: allow remote hosts to connect to local forwarded ports
+]
+
+---
+.right-column[
+- `-i identity_file`: specify public key to use for authentication
+]
+
+--
+.right-column[
+- `-J [user@]host[:port]`: use a jump host and establish forwarding to destination from there
+]
+???
+Demo
+TODO: TEST THIS!
+
+--
+.right-column[
+- `-L [bind_address:]port:host:hostport`: forward connections to the local host to the remote host/port
+]
+???
+unix sockets can be forwarded as well
+
+--
+.right-column[
+- `-N`: no remote command execution
+]
+???
+useful when just wanting to forward ports
+
+---
+.right-column[
+- `-p`: port on remote host
+]
+
+--
+.right-column[
+- `-R [bind_address:] port:host:hostport`: reverse port forwarding
+]
+
+--
+.right-column[
+- `-X`: enable X11 forwarding
 ]
 
 ---
@@ -436,14 +535,25 @@ layout: true
   ## How to SSH?
   ## SSH usage
   ### Basic usage
+  ### Options
   ### Environment
-  ### Tunneling
 ]
 ---
 
 --
 .right-column[
-- 
+- some of the interesting environment variables are
+  - `DISPLAY`: location of forwarded X11 server
+  - `SSH_CONNECTION`: client and server of the connection (client IP, client port, server IP, server port)
+  - TODO: Test with different usernames to show more variables
+]
+
+--
+.right-column[
+- escape characters
+  - `~.`: disconnect
+  - `~^Z`: background session
+  - `~#`: list forwarded connections
 ]
 
 ---
@@ -462,6 +572,8 @@ layout: true
 - load balancing
 
 - multiplexing
+
+- VPN
 
 - other clients
   - MoSH!
