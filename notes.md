@@ -22,44 +22,44 @@ authetntication, encryption, message integrity
 ~SSH protects against: eavesdropping, data manipulation, IP spoofing (MITM)
 ~bad: password auth doesn't verify RSA identity of client
 
-# Config
-system-wide vs user-specific
-system: (/etc/ssh) ssh\_config, sshd\_config
-user: (~/.ssh) authorized\_keys, known\_hosts, \*/\*.pub, config
-user config must be owned by user and unreadable by everyone else, otherwise it's ignored
+~# Config
+~system-wide vs user-specific
+~system: (/etc/ssh) ssh\_config, sshd\_config
+~user: (~/.ssh) authorized\_keys, known\_hosts, \*/\*.pub, config
+~user config must be owned by user and unreadable by everyone else, otherwise it's ignored
 
-## sshd\_config
-PasswordAuthentication
-PubkeyAuthentication
-HostBased, ChallengeResponse, KeyboardInteractive
-AllowGroups, AllowUsers (intersection)
-DenyGroups, DenyUsers (union)
-AllowAgentForwarding (?)
-X11Forwarding
-PermitTunnel
-PermintUserEnvironment
+~## sshd\_config
+~PasswordAuthentication
+~PubkeyAuthentication
+~HostBased, ChallengeResponse, KeyboardInteractive
+~AllowGroups, AllowUsers (intersection)
+~DenyGroups, DenyUsers (union)
+~AllowAgentForwarding (?)
+~X11Forwarding
+~PermitTunnel
+~PermintUserEnvironment
+~
+~TCPKeepAlive [yes/no]  (?)
+~ServerAliveInterval [sec]  (?)
 
-TCPKeepAlive [yes/no]  (?)
-ServerAliveInterval [sec]  (?)
+~Match user <username>
+~ForceCommand <command>
 
-Match user <username>
-ForceCommand <command>
-
-## ~/.ssh
-Host dev
-  User johndoe
-  Hostname foobar.com
-  Port 2200
-  ForwardX11 yes
-  Localforward 8000 10.10.10.10:80
-
-## speedup
-multiple channels per connection
-multiplexing:
-- ControlMaster auto
-- ControlPath ~/.ssh/master/%r@%h:%p
-- ControlPersist yes
-TODO: test!
+~## ~/.ssh
+~Host dev
+  ~User johndoe
+  ~Hostname foobar.com
+  ~Port 2200
+  ~ForwardX11 yes
+  ~Localforward 8000 10.10.10.10:80
+~
+~## speedup
+~multiple channels per connection
+~multiplexing:
+~- ControlMaster auto
+~- ControlPath ~/.ssh/master/%r@%h:%p
+~- ControlPersist yes
+~TODO: test!
 
 ~# Usages
 ~remote sysadmin
@@ -70,11 +70,11 @@ TODO: test!
 ~little bandwidth
 ~prevalent (industry standard) - all platforms, mobile, browser
 
-# Basic usage
-## ssh [user@]host
-(sample with fingerprint)
-fingerprint - get from sysadmin, connect in trustyed network or just hope it's ok :)
-works over IPv6
+~# Basic usage
+~## ssh [user@]host
+~(sample with fingerprint)
+~fingerprint - get from sysadmin, connect in trustyed network or just hope it's ok :)
+~works over IPv6
 
 ~## ssh user@host COMMAND
 ~(sample)
@@ -85,11 +85,11 @@ works over IPv6
 ~## scp user@host:/path/to/file .
 ~(or sftp)
 
-## tunnelling
-encrypted, authenticated, through firewall
-ssh -L <localport>:<remotehost>:<remoteport> user@host
-reverse: ssh -R <remoteport>:<localhost>:<localport> user@host
-options: -g to allow others to use the tunnel, -N only forwarding, no commands
+~## tunnelling
+~encrypted, authenticated, through firewall
+~ssh -L <localport>:<remotehost>:<remoteport> user@host
+~reverse: ssh -R <remoteport>:<localhost>:<localport> user@host
+~options: -g to allow others to use the tunnel, -N only forwarding, no commands
 
 ~# SSH bruteforce
 ~(images from http://dragonresearchgroup.org/insight/sshpwauth-cloud.html)
@@ -100,12 +100,12 @@ options: -g to allow others to use the tunnel, -N only forwarding, no commands
 ~disable password or at least use a strong password
 ~fail2ban `http://www.fail2ban.org/wiki/index.php/Main_Page`
 
-# Keys
-pairs of public-private key
-private: kept by user to authenticate
-public: placed on server to identify user
-ssh-copy-id
-tools: ssh-keygen, ssh-agent (keeps private key in memory), ssh-add (adds key to the key agent)
+~# Keys
+~pairs of public-private key
+~private: kept by user to authenticate
+~public: placed on server to identify user
+~ssh-copy-id
+~tools: ssh-keygen, ssh-agent (keeps private key in memory), ssh-add (adds key to the key agent)
 
 ~# Environment variables
 ~SSH\_CONNECTION
@@ -113,8 +113,8 @@ tools: ssh-keygen, ssh-agent (keeps private key in memory), ssh-add (adds key to
 ~SSH\_CLIENT
 ~SSH\_TTY
 
-# Demos
-port forwarding
+~# Demos
+~port forwarding
 
 ~# Sources
 ~http://www.slideshare.net/shahhe/introduction-to-ssh

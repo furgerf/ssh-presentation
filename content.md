@@ -220,6 +220,7 @@ layout: true
 .right-column[
 - ... and server authentication!
 ]
+???
 To be demonstrated later
 
 --
@@ -232,7 +233,22 @@ Available on pretty much all platforms, mobile, browser
 **Demo**: Show FireSSH plugin
 
 ---
+.right-column[
+- basically, it turns this...
+![:scale 55%](images/without-ssh.png)
+]
 
+---
+count: false
+.right-column[
+- basically, it turns this...
+![:scale 55%](images/without-ssh.png)
+- ... into this:
+
+![:scale 55%](images/with-ssh.png)
+]
+
+---
 .right-column[
 - run commands on remote systems
 ]
@@ -293,6 +309,15 @@ Host-based: grant access if host is listed in `/etc/hosts.equiv` (or one of a fe
 username matches, and the key in `known_hosts` matches. This is inherently insecure.
 
 Challenge-response: server sends Qq and expects response (eg. Bx or PAM).
+
+--
+.right-column[
+TODO: Verify that's correct
+- up to the user to verify the server fingerprint:
+  - get from sysadmin
+  - initial connection from trusted network
+  - hope it's ok
+]
 
 --
 .right-column[
@@ -382,11 +407,41 @@ layout: true
 TODO
 #### System-wide configuration
 - `/etc/ssh/ssh_config`, `/etc/ssh/sshd_config`
-]
+system-wide vs user-specific
+system: (/etc/ssh) ssh\_config, sshd\_config
+user: (~/.ssh) authorized\_keys, known\_hosts, \*/\*.pub, config
+user config must be owned by user and unreadable by everyone else, otherwise it's ignored
+## sshd\_config
+PasswordAuthentication
+PubkeyAuthentication
+HostBased, ChallengeResponse, KeyboardInteractive
+AllowGroups, AllowUsers (intersection)
+DenyGroups, DenyUsers (union)
+AllowAgentForwarding (?)
+X11Forwarding
+PermitTunnel
+PermintUserEnvironment
 
---
-.right-column[
-- 
+TCPKeepAlive [yes/no]  (?)
+ServerAliveInterval [sec]  (?)
+
+Match user <username>
+ForceCommand <command>
+
+## ~/.ssh
+Host dev
+  User johndoe
+  Hostname foobar.com
+  Port 2200
+  ForwardX11 yes
+  Localforward 8000 10.10.10.10:80
+
+## speedup
+multiple channels per connection
+multiplexing:
+- ControlMaster auto
+- ControlPath ~/.ssh/master/%r@%h:%p
+- ControlPersist yes
 ]
 
 ---
@@ -441,12 +496,23 @@ count: false
 count: false
 .centered[
 ## `ssh -X user@host COMMAND`
-
-`-X`: enable X11 forwarding
 ]
-
 ???
-Demo
+**Demo**: TODO: which?
+
+---
+.right-column[
+### Common options
+- `-p port`: specify port on remote host
+- `-X`: enable X11 forwarding
+- `-C`: enable compression
+- `-c cipher`: specify cipher
+- `-i identity_file`: specify key for authentication
+]
+???
+Compression uses `gzip` - recommended for slow networks only
+
+Cipher has security and performance implications
 
 ---
 layout: true
@@ -455,81 +521,47 @@ layout: true
   ## Why SSH?
   ## How to SSH?
   ## SSH usage
-  ### Basic usage
-  ### Options
+  ### ~~Basic~~ usage
 ]
 ---
 
+.right-column[
+### Tunnelling
+]
+
 ---
+count: false
 .right-column[
-- `-C`: enable compression
+### Tunnelling
+- secure insecure protocol
 ]
-???
-uses `gzip` - recommended for slow networks only
 
---
+---
+count: false
 .right-column[
-- `-c`: specify cipher
+### Tunnelling
+- secure insecure protocol
+- make remote service appear local
 ]
-???
-has security and performance implications
 
---
+---
+count: false
 .right-column[
-- `-D [bind_address:]port`: dynamic port forwarding
-]
-???
-listens on the local address and forwards all connections to the address
-unix sockets can be forwarded as well
-
---
-.right-column[
+### Tunnelling
+- secure insecure protocol
+- make remote service appear local
+- `-L [bind_address:]port:host:hostport`: forward connections to the local host to the remote host/port
 - `-f`: fork to background, recommended when using X11-forwarding
-]
-???
-implies `-n` (stdin > /dev/null)
-
---
-.right-column[
+- `-N`: no remote command execution
+- `-R [bind_address:] port:host:hostport`: reverse port forwarding
 - `-g`: allow remote hosts to connect to local forwarded ports
 ]
-
----
-.right-column[
-- `-i identity_file`: specify public key to use for authentication
-]
-
---
-.right-column[
-- `-J [user@]host[:port]`: use a jump host and establish forwarding to destination from there
-]
-???
-Demo
-TODO: TEST THIS!
-
---
-.right-column[
-- `-L [bind_address:]port:host:hostport`: forward connections to the local host to the remote host/port
-]
 ???
 unix sockets can be forwarded as well
-
---
-.right-column[
-- `-N`: no remote command execution
-]
-???
+listens on the local address and forwards all connections to the address
+unix sockets can be forwarded as well
+implies `-n` (stdin > /dev/null)
 useful when just wanting to forward ports
-
----
-.right-column[
-- `-p`: port on remote host
-]
-
---
-.right-column[
-- `-R [bind_address:] port:host:hostport`: reverse port forwarding
-]
 
 ---
 layout: true
@@ -560,34 +592,6 @@ layout: true
   - `~#`: list forwarded connections
 ]
 
----
-layout: true
-.left-column[
-  ## What is SSH?
-  ## Why SSH?
-  ## How to SSH?
-  ## SSH usage
-  ### Basic usage
-  ### Options
-  ### Environment
-  ### Tunneling
-]
----
-
---
-.right-column[
-- secure insecure protocol
-]
-
---
-.right-column[
-- make remote service appear local
-]
-
---
-.right-column[
-- make remote service appear local
-]
 
 ---
 layout: true
@@ -610,6 +614,8 @@ layout: true
 
 - SSH agent
 
+- other SSH-based utilities
+
 - other clients
   - MoSH!
 
@@ -625,7 +631,8 @@ https://medium.com/swlh/ssh-how-does-it-even-9e43586e4ffc
 https://systemoverlord.com/projects/ssh_presentation
 http://www.slideshare.net/shahhe/introduction-to-ssh
 https://en.wikipedia.org/wiki/Secure_Shell
-https://www.digitalocean.com/community/tutorials/ssh-essentials-working-with-ssh-servers-clients-and-keys
+https://www.digitalocean.com/community/tutorials\
+  /ssh-essentials-working-with-ssh-servers-clients-and-keys
 http://dragonresearchgroup.org/insight/sshpwauth-cloud.html
 http://www.ssh.com
 http://www.openssh.org
