@@ -285,7 +285,15 @@ layout: true
 
 ---
 .right-column[
-- server sends its public host key
+- server sends its public fingerprint
+]
+
+--
+.right-column[
+- up to the user to verify the server fingerprint:
+  - get from sysadmin
+  - initial connection from trusted network
+  - hope it's ok
 ]
 
 --
@@ -310,16 +318,7 @@ username matches, and the key in `known_hosts` matches. This is inherently insec
 
 Challenge-response: server sends Qq and expects response (eg. Bx or PAM).
 
---
-.right-column[
-TODO: Verify that's correct
-- up to the user to verify the server fingerprint:
-  - get from sysadmin
-  - initial connection from trusted network
-  - hope it's ok
-]
-
---
+-
 .right-column[
 - `ssh` maintains `~/.ssh/known_hosts` file to avoid MITM attacks
 - TODO: Move to other slide
@@ -352,7 +351,7 @@ layout: true
 ]
 
 ---
-
+count: false
 .right-column[
 - any connection increases the attack surface
 ]
@@ -373,15 +372,15 @@ layout: true
 
 --
 .right-column[
-- use non-standard port
-  - no real security, but less noise
+- disable password authentication
+  - use SSH keys instead
+  - (or at least use strong passwords)
 ]
 
 --
 .right-column[
-- disable password authentication
-  - use SSH keys instead
-  - (or at least use strong passwords)
+- use non-standard port
+  - no real security, but less noise
 ]
 
 --
@@ -503,11 +502,11 @@ count: false
 ---
 .right-column[
 ### Common options
-- `-p port`: specify port on remote host
+- `-i identity_file`: specify key for authentication
 - `-X`: enable X11 forwarding
+- `-p port`: specify port on remote host
 - `-C`: enable compression
 - `-c cipher`: specify cipher
-- `-i identity_file`: specify key for authentication
 ]
 ???
 Compression uses `gzip` - recommended for slow networks only
@@ -550,18 +549,26 @@ count: false
 ### Tunnelling
 - secure insecure protocol
 - make remote service appear local
-- `-L [bind_address:]port:host:hostport`: forward connections to the local host to the remote host/port
-- `-f`: fork to background, recommended when using X11-forwarding
-- `-N`: no remote command execution
-- `-R [bind_address:] port:host:hostport`: reverse port forwarding
-- `-g`: allow remote hosts to connect to local forwarded ports
+- some options:
+  - `-L [address:]port:host:hostport`: forward connections to the local host to the remote host/port
+  - `-f`: fork to background, recommended when using X11-forwarding
+  - `-N`: no remote command execution
+  - `-g`: allow remote hosts to connect to local forwarded ports
 ]
 ???
-unix sockets can be forwarded as well
-listens on the local address and forwards all connections to the address
-unix sockets can be forwarded as well
-implies `-n` (stdin > /dev/null)
-useful when just wanting to forward ports
+**Demo**: access localhost mongodb
+```
+ssh -f -N -L 12345:localhost:27017 hxm@cdaip
+mongo localhost:12345/fatigue
+```
+
+Also: `-R` (reverse proxy), `-D`- (dynamic port forwarding)
+
+Unix sockets can be forwarded as well
+
+`-f`: implies `-n` (stdin > /dev/null)
+
+`-N`: Useful when just wanting to forward ports
 
 ---
 layout: true
@@ -571,17 +578,15 @@ layout: true
   ## How to SSH?
   ## SSH usage
   ### Basic usage
-  ### Options
-  ### Environment
+  ### Environment/session control
 ]
 ---
 
 --
 .right-column[
-- some of the interesting environment variables are
+- some interesting environment variables
   - `DISPLAY`: location of forwarded X11 server
   - `SSH_CONNECTION`: client and server of the connection (client IP, client port, server IP, server port)
-  - TODO: Test with different usernames to show more variables
 ]
 
 --
@@ -624,8 +629,7 @@ layout: true
 ---
 layout: true
 ---
-### Sources
-#### Information
+#### Sources - information
 ```
 https://medium.com/swlh/ssh-how-does-it-even-9e43586e4ffc
 https://systemoverlord.com/projects/ssh_presentation
@@ -641,7 +645,7 @@ man ssh
 man sshd
 ```
 
-#### Tools
+#### Sources - tools
 ```
 https://github.com/apenwarr/sshuttle
 https://github.com/shazow/ssh-chat
