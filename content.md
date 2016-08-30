@@ -95,7 +95,12 @@ count: false
 ]
 
 ???
-Demo: Log in from bash-user to non-bash user
+**Demo**: Log in from bash-user to non-bash user on known host
+
+`echo $0`: current shell
+
+`getent passwd $LOGNAME`: user's login shell
+
 
 ---
 count: false
@@ -164,7 +169,7 @@ count: false
 - SSH-2: various improvements over SSH-1
   - released by SCS (1998)
   - incompatible to SSH-1
-  - adopted as standard by IETF (2006), RFC 4251
+  - standardized by IETF: RFC 4251 (2006)
 ]
 
 ---
@@ -215,8 +220,7 @@ layout: true
 .right-column[
 - ... and server authentication!
 ]
-???
-Demo: MITM
+To be demonstrated later
 
 --
 .right-column[
@@ -224,7 +228,8 @@ Demo: MITM
 ]
 ???
 Available on pretty much all platforms, mobile, browser
-Demo: FireSSH plugin
+
+**Demo**: Show FireSSH plugin
 
 ---
 
@@ -252,52 +257,50 @@ eg. set-ntp on FPUs
 ???
 Other remote file transfer applications can't do that!
 
-
 ---
 layout: true
 .left-column[
   ## What is SSH?
   ## Why SSH?
   ## How to SSH?
-  ### Overview
+  ### Connection
 ]
 ---
 
---
+---
 .right-column[
-- encryption is based on public-key cryptography
+- server sends its public host key
 ]
 
 --
 .right-column[
-- authentication can be ensure in one of two ways
-  - either use automatically-generated key pair for encryption and password for authentication
-  - or use manually-generated key pair for _both_ encryption and authentication
+- establish encryption: session key negotiation (Diffie-Hellman)
 ]
+???
+Diffie-Hellman:
+- both agree on large prime number and encryption generator (like AES)
+- both generate secret prime number (private key) and generate public key with the private key, encryption generator and the shared prime number
+- the public keys are exchanged
+- both calculate the shared session key from the own private key, the other's public key, and the original shared prime number
 
 --
 .right-column[
-- TODO: crypto hs, conn encrypted with symmetric cipher, client authenticates
-]
-
---
-.right-column[
-- authentication methods:
-  - GSSAPI-based, host-based, **public key**, challenge-response, password
-  - public key: grant access when public key in `~/.ssh/authorized_hosts` belongs to user/host TODO there's something missing here
-  - password transmission is safe because communication is encrypted
+- authenticate user
+  - based on GSSAPI, host, **public key**, challenge-response, or _password_
 ]
 ???
 Host-based: grant access if host is listed in `/etc/hosts.equiv` (or one of a few other files), the
 username matches, and the key in `known_hosts` matches. This is inherently insecure.
-challenge-response: server sends Qq and expects response (eg. Bx or PAM).
+
+Challenge-response: server sends Qq and expects response (eg. Bx or PAM).
 
 --
 .right-column[
 - `ssh` maintains `~/.ssh/known_hosts` file to avoid MITM attacks
+- TODO: Move to other slide
 ]
 ???
-MITM demo
+TODO: Demo: Man-in-the-Middle attack
 
 ---
 layout: true
@@ -305,7 +308,7 @@ layout: true
   ## What is SSH?
   ## Why SSH?
   ## How to SSH?
-  ### Overview
+  ### Connection
   ### Risks
 ]
 ---
@@ -368,7 +371,7 @@ layout: true
   ## What is SSH?
   ## Why SSH?
   ## How to SSH?
-  ### Overview
+  ### Connection
   ### Risks
   ### Configuration
 ]
@@ -376,6 +379,7 @@ layout: true
 
 --
 .right-column[
+TODO
 #### System-wide configuration
 - `/etc/ssh/ssh_config`, `/etc/ssh/sshd_config`
 ]
@@ -397,7 +401,7 @@ layout: true
 
 --
 .right-column[
-#### Manual
+#### From the manual:
 
 `ssh  [-1246AaCfGgKkMNnqsTtVvXxYy]  [-b  bind_address]  [-c  cipher_spec]  [-D[bind_address  :]port] [-E log_file] [-e escape_char] [-F configfile] [-I pkcs11] [-i identity_file] [-J[user@]host[:port]] [-L address] [-l login_name] [-m mac_spec] [-O ctl_cmd] [-o option] [-p port] [-Q query_option] [-R address] [-S ctl_path] [-W host :port] [-w local_tun[:remote_tun]] [user@]hostname [command]`
 ]
@@ -429,13 +433,18 @@ count: false
 ]
 
 ???
-Demo
+**Demo**:
+
+`ls -alh`
 
 ---
 count: false
 .centered[
 ## `ssh -X user@host COMMAND`
+
+`-X`: enable X11 forwarding
 ]
+
 ???
 Demo
 
@@ -522,11 +531,6 @@ useful when just wanting to forward ports
 - `-R [bind_address:] port:host:hostport`: reverse port forwarding
 ]
 
---
-.right-column[
-- `-X`: enable X11 forwarding
-]
-
 ---
 layout: true
 .left-column[
@@ -563,6 +567,35 @@ layout: true
   ## Why SSH?
   ## How to SSH?
   ## SSH usage
+  ### Basic usage
+  ### Options
+  ### Environment
+  ### Tunneling
+]
+---
+
+--
+.right-column[
+- secure insecure protocol
+]
+
+--
+.right-column[
+- make remote service appear local
+]
+
+--
+.right-column[
+- make remote service appear local
+]
+
+---
+layout: true
+.left-column[
+  ## What is SSH?
+  ## Why SSH?
+  ## How to SSH?
+  ## SSH usage
   ## Outlook
 ]
 ---
@@ -574,6 +607,8 @@ layout: true
 - multiplexing
 
 - VPN
+
+- SSH agent
 
 - other clients
   - MoSH!
@@ -590,9 +625,11 @@ https://medium.com/swlh/ssh-how-does-it-even-9e43586e4ffc
 https://systemoverlord.com/projects/ssh_presentation
 http://www.slideshare.net/shahhe/introduction-to-ssh
 https://en.wikipedia.org/wiki/Secure_Shell
+https://www.digitalocean.com/community/tutorials/ssh-essentials-working-with-ssh-servers-clients-and-keys
 http://dragonresearchgroup.org/insight/sshpwauth-cloud.html
 http://www.ssh.com
 http://www.openssh.org
+https://en.wikibooks.org/wiki/OpenSSH
 man ssh
 man sshd
 ```
