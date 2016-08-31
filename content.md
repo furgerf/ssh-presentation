@@ -605,6 +605,71 @@ layout: true
   ## Why SSH?
   ## How to SSH?
   ## SSH usage
+  ## More SSH
+]
+---
+
+---
+count: false
+.right-column[
+- [ssh-chat](https://github.com/shazow/ssh-chat)
+  - built-in encryption
+  - built-in authentication
+  - user whitelisting
+]
+???
+**Demo**: Log in on [chat.shazow.net](chat.shazow.net)
+
+---
+count: false
+.right-column[
+- [ssh-chat](https://github.com/shazow/ssh-chat)
+  - built-in encryption
+  - built-in authentication
+  - user whitelisting
+- [sshuttle](https://github.com/apenwarr/sshuttle)
+  - "where transparent proxy meets VPN meets ssh"
+]
+???
+**Demo**: Connect to raspi and access webservice
+
+---
+count: false
+.right-column[
+- [ssh-chat](https://github.com/shazow/ssh-chat)
+  - built-in encryption
+  - built-in authentication
+  - user whitelisting
+- [sshuttle](https://github.com/apenwarr/sshuttle)
+  - "where transparent proxy meets VPN meets ssh"
+- SSH RPC
+  - `ssh api.example.com multiply 4 5`
+]
+
+---
+count: false
+.right-column[
+- [ssh-chat](https://github.com/shazow/ssh-chat)
+  - built-in encryption
+  - built-in authentication
+  - user whitelisting
+- [sshuttle](https://github.com/apenwarr/sshuttle)
+  - "where transparent proxy meets VPN meets ssh"
+- SSH RPC
+  - `ssh api.example.com multiply 4 5`
+- SSH fileserver
+  - `ssh static.example.com get \
+    /images/header.png`
+]
+
+---
+layout: true
+.left-column[
+  ## What is SSH?
+  ## Why SSH?
+  ## How to SSH?
+  ## SSH usage
+  ## More SSH
   ## Outlook
 ]
 ---
@@ -612,20 +677,34 @@ layout: true
 --
 .right-column[
 - load balancing
+]
 
+--
+.right-column[
 - multiplexing
+]
 
+--
+.right-column[
 - VPN
+]
 
+--
+.right-column[
 - SSH agent
+]
 
+--
+.right-column[
 - other SSH-based utilities
+]
 
+--
+.right-column[
 - other clients
   - MoSH!
-
-- ...
 ]
+
 ---
 layout: true
 ---
@@ -647,9 +726,9 @@ man sshd
 
 #### Sources - tools
 ```
-https://github.com/apenwarr/sshuttle
 https://github.com/shazow/ssh-chat
-https://github.com/tombh/texttop <---?
+https://github.com/apenwarr/sshuttle
+https://github.com/tombh/texttop
 
 https://github.com/gnab/remark
 ```
