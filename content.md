@@ -275,7 +275,7 @@ layout: true
 ]
 ---
 
----
+--
 .right-column[
 - server sends its public fingerprint
 ]
