@@ -94,14 +94,6 @@ count: false
 - _but, it's no application (and no shell!)_
 ]
 
-???
-**Demo**: Log in from bash-user to non-bash user on known host
-
-`echo $0`: current shell
-
-`getent passwd $LOGNAME`: user's login shell
-
-
 ---
 count: false
 .right-column[
@@ -230,7 +222,7 @@ To be demonstrated later
 ???
 Available on pretty much all platforms, mobile, browser
 
-**Demo**: Show FireSSH plugin
+**Demo**: Show FireSSH plugin to login on raspi (using stored session)
 
 ---
 .right-column[
@@ -318,14 +310,6 @@ username matches, and the key in `known_hosts` matches. This is inherently insec
 
 Challenge-response: server sends Qq and expects response (eg. Bx or PAM).
 
--
-.right-column[
-- `ssh` maintains `~/.ssh/known_hosts` file to avoid MITM attacks
-- TODO: Move to other slide
-]
-???
-TODO: Demo: Man-in-the-Middle attack
-
 ---
 layout: true
 .left-column[
@@ -403,45 +387,56 @@ layout: true
 
 --
 .right-column[
-TODO
-#### System-wide configuration
-- `/etc/ssh/ssh_config`, `/etc/ssh/sshd_config`
-system-wide vs user-specific
-system: (/etc/ssh) ssh\_config, sshd\_config
-user: (~/.ssh) authorized\_keys, known\_hosts, \*/\*.pub, config
-user config must be owned by user and unreadable by everyone else, otherwise it's ignored
-## sshd\_config
-PasswordAuthentication
-PubkeyAuthentication
+- user configuration
+  - `~/.ssh/config`
+]
+???
+**Demo**
+
+`ssh [raspiuser]@[raspihost]` [Show user config] `ssh raspi`
+
+Because already logged in, show login attempts on raspi (attack surface!):
+
+`journalctl --unit=sshd -r --no-pager | grep -i invalid`
+
+--
+.right-column[
+- system-wide configuration
+  - `/etc/ssh/ssh_config`
+  - `/etc/ssh/sshd_config`
+]
+???
+Configure stuff like:
+```
+PasswordAuthentication, PubkeyAuthentication,
 HostBased, ChallengeResponse, KeyboardInteractive
-AllowGroups, AllowUsers (intersection)
-DenyGroups, DenyUsers (union)
-AllowAgentForwarding (?)
+AllowGroups, AllowUsers, DenyGroups, DenyUsers
 X11Forwarding
 PermitTunnel
 PermintUserEnvironment
 
-TCPKeepAlive [yes/no]  (?)
-ServerAliveInterval [sec]  (?)
-
 Match user <username>
 ForceCommand <command>
+```
 
-## ~/.ssh
-Host dev
-  User johndoe
-  Hostname foobar.com
-  Port 2200
-  ForwardX11 yes
-  Localforward 8000 10.10.10.10:80
+**Demo:** MatchUser and ForceCommand
 
-## speedup
-multiple channels per connection
-multiplexing:
-- ControlMaster auto
-- ControlPath ~/.ssh/master/%r@%h:%p
-- ControlPersist yes
+Show `/etc/ssh/sshd_config` on raspi and login as `dummy` user
+
+--
+.right-column[
+- keys
+  - `~/.ssh/known_hosts`
+  - `~/.ssh/authorized_keys`
+  - `~/.ssh/id_rsa{,.pub}`
 ]
+???
+**Demo** `ssh -v raspi` (maybe), swap IP/key in `~/.ssh/known_hosts` and log in again
+
+Permissions:
+- `~/.ssh`: 700
+- public keys: 644
+- private keys: 600
 
 ---
 layout: true
@@ -497,7 +492,9 @@ count: false
 ## `ssh -X user@host COMMAND`
 ]
 ???
-**Demo**: TODO: which?
+**Demo**:
+
+`xclock`
 
 ---
 .right-column[
@@ -663,6 +660,49 @@ count: false
 ]
 
 ---
+count: false
+.right-column[
+- [ssh-chat](https://github.com/shazow/ssh-chat)
+  - built-in encryption
+  - built-in authentication
+  - user whitelisting
+- [sshuttle](https://github.com/apenwarr/sshuttle)
+  - "where transparent proxy meets VPN meets ssh"
+- SSH RPC
+  - `ssh api.example.com multiply 4 5`
+- SSH fileserver
+  - `ssh static.example.com get \
+    /images/header.png`
+- distributed multihead X-server
+]
+???
+**Demo**:
+
+xdmx!
+
+---
+count: false
+.right-column[
+- [ssh-chat](https://github.com/shazow/ssh-chat)
+  - built-in encryption
+  - built-in authentication
+  - user whitelisting
+- [sshuttle](https://github.com/apenwarr/sshuttle)
+  - "where transparent proxy meets VPN meets ssh"
+- SSH RPC
+  - `ssh api.example.com multiply 4 5`
+- SSH fileserver
+  - `ssh static.example.com get \
+    /images/header.png`
+- distributed multihead X-server
+- X streaming to TTY
+]
+???
+**Demo**:
+
+Run texttop on AL
+
+---
 layout: true
 .left-column[
   ## What is SSH?
@@ -722,6 +762,7 @@ http://www.openssh.org
 https://en.wikibooks.org/wiki/OpenSSH
 man ssh
 man sshd
+man xdmx
 ```
 
 #### Sources - tools
@@ -729,7 +770,7 @@ man sshd
 https://github.com/shazow/ssh-chat
 https://github.com/apenwarr/sshuttle
 https://github.com/tombh/texttop
-
+http://dmx.sourceforge.net/
 https://github.com/gnab/remark
 ```
 
