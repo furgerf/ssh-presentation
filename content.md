@@ -1,6 +1,18 @@
 class: center, middle
 
-# SSH - Secure SHell
+&nbsp;
+
+&nbsp;
+
+# **SSH - Secure SHell**
+
+&nbsp;
+
+&nbsp;
+
+### Fabian Furger
+
+September 1, 2016
 
 ---
 
@@ -33,7 +45,7 @@ class: center, middle
 --
 
 - my main takeaway from BSE so far:
-  - we are different people... with different areas of knowledge (duh!)
+  - we are different people... with very different areas of knowledge (duh!)
 
 --
 - that was the main factor when choosing a topic
